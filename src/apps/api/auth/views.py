@@ -95,24 +95,12 @@ async def single_user_info(
 @router.put("/user/{user_id}", status_code=status.HTTP_200_OK,
             dependencies=[Depends(JwtBearer()), Depends(role_check(["admin"]))],
             response_model=schemas.ResponseUserSchema)
-async def put_user_info(
-        user_id: str,
-        data: schemas.PutUserDataSchema,
-        session: Annotated[AsyncSession, Depends(db_helper.session_getter)]
-):
-    put_data = await update_user_data_obj(session, data=data.model_dump(), uuid=user_id)
-    if put_data:
-        new_data = await get_user_data_obj(session, uuid=user_id)
-        return new_data
-    raise exceptions.user_not_found
-
-
 @router.patch("/user/{user_id}", status_code=status.HTTP_200_OK,
             dependencies=[Depends(JwtBearer()), Depends(role_check(["admin"]))],
             response_model=schemas.ResponseUserSchema)
-async def patch_user_info(
+async def put_user_info(
         user_id: str,
-        data: schemas.PatchUserDataSchema,
+        data: schemas.UpdateUserDataSchema,
         session: Annotated[AsyncSession, Depends(db_helper.session_getter)]
 ):
     put_data = await update_user_data_obj(session, data=data.model_dump(), uuid=user_id)

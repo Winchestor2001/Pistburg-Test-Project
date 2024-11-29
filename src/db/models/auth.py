@@ -1,7 +1,4 @@
-import random
-
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import BigInteger
 
 from src.db.base import Base, BaseMixin
 

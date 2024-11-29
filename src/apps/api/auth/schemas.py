@@ -1,9 +1,7 @@
 import datetime
-import re
-from typing import Any, Optional, List
 from uuid import UUID
 
-from pydantic import BaseModel, validator, Field, ConfigDict
+from pydantic import BaseModel
 
 
 class DefaultDataSchema(BaseModel):
@@ -43,11 +41,7 @@ class AuthenticationUserSchema(BaseModel):
     password: str
 
 
-class PutUserDataSchema(UserDataSchema):
-    role: str
-
-
-class PatchUserDataSchema(BaseModel):
+class UpdateUserDataSchema(BaseModel):
     full_name: str | None = None
     username: str | None = None
     role: str | None = None
