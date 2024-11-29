@@ -2,18 +2,20 @@ from decimal import Decimal
 
 from sqlalchemy import select, and_, update, Sequence, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
+
 from src.db import Product
 
 
-async def create_product_obj(session: AsyncSession, name: str, price: Decimal, image: str | None) -> Product:
-    product_obj = Product(name=name, price=price, image=image)
+async def create_product_obj(session: AsyncSession, name: str, category_id: str, price: Decimal, image: str | None) -> Product:
+    product_obj = Product(name=name, price=price, image=image, category_id=category_id)
     session.add(product_obj)
     await session.commit()
     return product_obj
 
 
 async def all_products_obj(session: AsyncSession) -> Sequence[Product] | None:
-    stmt = select(Product)
+    stmt = select(Product).options(joinedload(Product.category))
     result = (await session.execute(stmt)).scalars().all()
     return result
 

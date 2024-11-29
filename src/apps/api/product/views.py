@@ -44,10 +44,10 @@ async def single_product(
 @router.patch("/product/{product_id}", status_code=status.HTTP_200_OK, response_model=bool)
 async def update_product(
         product_id: str,
-        category_data: schemas.UpdateProductSchema,
+        product_data: schemas.UpdateProductSchema,
         session: Annotated[AsyncSession, Depends(db_helper.session_getter)]
 ):
-    updated_product = await update_product_data_obj(session, uuid=product_id, data=category_data.model_dump())
+    updated_product = await update_product_data_obj(session, uuid=product_id, data=product_data.model_dump())
     return updated_product
 
 
