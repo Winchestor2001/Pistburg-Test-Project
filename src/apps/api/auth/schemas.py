@@ -22,6 +22,7 @@ class RegistrationUserSchema(UserDataSchema):
     full_name: str
     username: str
     password: str
+    role: str
 
 
 class ResponseUserSchema(DefaultDataSchema, UserDataSchema):

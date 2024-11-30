@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db.base import Base, BaseMixin
 
 if TYPE_CHECKING:
-    from src.db import Order
+    from src.db import Order, Cart
 
 
 class User(Base, BaseMixin):
@@ -17,6 +17,7 @@ class User(Base, BaseMixin):
     verification_code: Mapped[str] = mapped_column(nullable=True)
 
     orders: Mapped["Order"] = relationship(back_populates="user")
+    cart: Mapped["Cart"] = relationship(back_populates="user")
 
     def __str__(self):
         return self.username

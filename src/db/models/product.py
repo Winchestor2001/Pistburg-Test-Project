@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db import Base, BaseMixin
 
 if TYPE_CHECKING:
-    from src.db import Category, Order
+    from src.db import Category, Order, Cart
 
 
 class Product(Base, BaseMixin):
@@ -19,6 +19,7 @@ class Product(Base, BaseMixin):
     category: Mapped['Category'] = relationship(back_populates='products')
 
     orders: Mapped["Order"] = relationship(back_populates="product")
+    cart: Mapped["Cart"] = relationship(back_populates="product")
 
     def __str__(self):
         return self.name

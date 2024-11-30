@@ -1,9 +1,10 @@
 import logging
-from typing import Annotated, List
+from typing import Annotated, List, Optional
 
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
+from starlette.responses import JSONResponse
 
 from src.apps.api.product import schemas
 from src.apps.api.product.crud import create_product_obj, all_products_obj, get_single_product_obj, \
@@ -23,12 +24,21 @@ async def add_product(
     return new_product
 
 
-@router.get("/product", status_code=status.HTTP_200_OK, response_model=List[schemas.ProductSchema])
+@router.get("/product", status_code=status.HTTP_200_OK, response_model=schemas.PaginatedResponse)
 async def product_list(
-        session: Annotated[AsyncSession, Depends(db_helper.session_getter)]
+        session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+        name: Optional[str] = Query(None, description="Filter products by name"),
+        page: int = Query(1, ge=1, description="Page number"),
+        page_size: int = Query(2, ge=1, le=100, description="Number of items per page"),
 ):
-    products = await all_products_obj(session)
-    return products
+    products, total_count = await all_products_obj(session, name=name, page=page, page_size=page_size)
+    return schemas.PaginatedResponse(
+        items=products,
+        total_count=total_count,
+        page=page,
+        page_size=page_size,
+        total_pages=(total_count // page_size) + (1 if total_count % page_size != 0 else 0),
+    )
 
 
 @router.get("/product/{product_id}", status_code=status.HTTP_200_OK, response_model=schemas.ProductSchema)

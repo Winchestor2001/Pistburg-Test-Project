@@ -14,8 +14,8 @@ async def create_order_obj(session: AsyncSession, quantity: int, product_id: str
     return order_obj
 
 
-async def all_orders_obj(session: AsyncSession) -> Sequence[Order] | None:
-    stmt = select(Order).options(
+async def all_orders_obj(session: AsyncSession, user_id: str) -> Sequence[Order] | None:
+    stmt = select(Order).where(Order.user_id == user_id).options(
         joinedload(Order.product).joinedload(Product.category),
         joinedload(Order.user))
     result = (await session.execute(stmt)).scalars().all()
@@ -33,7 +33,6 @@ async def get_single_order_obj(session: AsyncSession, uuid: str) -> Order | None
 async def update_order_data_obj(session: AsyncSession, data: dict, uuid: str) -> bool:
     filtered_data = {key: val for key, val in data.items() if val is not None}
     stmt = update(Order).where(Order.uuid == uuid).values(**filtered_data)
-
     result = await session.execute(stmt)
     if result:
         await session.commit()

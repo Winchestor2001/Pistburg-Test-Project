@@ -14,7 +14,7 @@ echo "upgrade complated"
 chmod -R 777 src/media
 chmod -R 777 logs
 
-#gunicorn src.runner:main_app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000
+gunicorn src.runner:main_app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000
 
 echo "Migration script completed."
 #echo "Application running successfully"

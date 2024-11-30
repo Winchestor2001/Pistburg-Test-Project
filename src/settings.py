@@ -65,5 +65,9 @@ class Settings(BaseSettings):
 
     log_file_path: str = str(Path(__file__).parent.parent / "logs/debug.log")
 
+    postgres_user: str = ""
+    postgres_password: str = ""
+    postgres_db: str = ""
+
 
 settings = Settings()

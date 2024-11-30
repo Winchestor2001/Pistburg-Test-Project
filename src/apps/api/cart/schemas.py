@@ -5,16 +5,11 @@ from decimal import Decimal
 from src.apps.api.product.schemas import ProductSchema
 
 
-class CreateOrderSchema(BaseModel):
+class CreateCartSchema(BaseModel):
     quantity: int
     product_id: str
 
 
-class OrderSchema(DefaultDataSchema, CreateOrderSchema):
+class CartSchema(DefaultDataSchema, CreateCartSchema):
     product: ProductSchema
     user: ResponseUserSchema
-
-
-class UpdateOrderSchema(BaseModel):
-    quantity: int | None
-    product_id: str | None

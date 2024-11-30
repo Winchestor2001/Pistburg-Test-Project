@@ -4,3 +4,4 @@ from .models.auth import *
 from .models.category import *
 from .models.product import *
 from .models.order import *
+from .models.cart import *

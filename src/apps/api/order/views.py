@@ -15,23 +15,24 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-@router.post("/order", dependencies=[Depends(JwtBearer())], status_code=status.HTTP_201_CREATED,
-             response_model=schemas.OrderSchema)
+@router.post("/order", dependencies=[Depends(JwtBearer())], status_code=status.HTTP_201_CREATED)
 async def add_order(
-        product_data: schemas.CreateOrderSchema,
+        order_data: schemas.CreateOrderSchema,
         session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
         token: dict = Depends(JwtBearer())
 ):
     user_id = token["uuid"]
-    new_product = await create_order_obj(session, **product_data.model_dump(), user_id=user_id)
+    new_product = await create_order_obj(session, **order_data.model_dump(), user_id=user_id)
     return new_product
 
 
 @router.get("/orders", status_code=status.HTTP_200_OK, response_model=List[schemas.OrderSchema])
 async def order_list(
-        session: Annotated[AsyncSession, Depends(db_helper.session_getter)]
+        session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+        token: dict = Depends(JwtBearer())
 ):
-    products = await all_orders_obj(session)
+    user_id = token["uuid"]
+    products = await all_orders_obj(session, user_id=user_id)
     return products
 
 

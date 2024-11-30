@@ -119,3 +119,13 @@ async def delete_user_info(
 ):
     delete_data = await delete_user_obj(session, uuid=user_id)
     return delete_data
+
+
+@router.post("/access", status_code=status.HTTP_200_OK, dependencies=[Depends(JwtBearer())])
+@router.post("/refresh", status_code=status.HTTP_200_OK, dependencies=[Depends(JwtBearer())])
+async def generate_tokens(
+        token: dict = Depends(JwtBearer())
+):
+    user_id = token["uuid"]
+    return JwtBearer.create_tokens(uuid=user_id)
+
